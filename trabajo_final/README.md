@@ -336,7 +336,7 @@ Visualiza una reserva existente.
       "url": "http://localhost:9292/resources/1/bookings/#ID_CREADO#"
     },
     {
-      "rel": "authorize",
+      "rel": "accept",
       "uri": "http://localhost:9292/resource/1/bookings/#ID_CREADO#",
       "method": "PUT"
     },
