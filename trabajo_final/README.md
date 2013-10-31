@@ -307,7 +307,7 @@ En caso que el bloque solicitado esté ocupado debrá retornar código de error
 
 ### Cancelar reserva
 
-Reserva un recurso en el bloque de tiempo indicado.
+Cancela una reserva existente.
 
 `DELETE /resources/1/bookings/100 HTTP/1.1`
 
