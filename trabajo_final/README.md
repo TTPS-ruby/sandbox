@@ -2,7 +2,7 @@
 
 La organización X cuenta con una gran cantidad de recursos que administra.
 Entre estos recursos podemos encontrar objetos como Computadoras o espacios
-físicos como Oficias o Salas.
+físicos como Oficinas o Salas.
 
 Lo que se quiere hacer es un mecanismo que permita a los usuarios de esa
 organización ocupar recursos. Una solicitud de ocupación de un recurso consta
@@ -159,7 +159,7 @@ Devuelve estado `200 OK` y el siguiente `body`:
       "start": "2013-10-26T11:00:00Z",
       "end": "2013-10-26T12:30:00Z",
       "status": "approved",
-      "user": "otheruser@gmail.com"
+      "user": "otheruser@gmail.com",
       "links": [
           {
             "rel": "self",
@@ -229,7 +229,7 @@ Devuelve estado `200 OK` y el siguiente `body`:
     {
       "resource_id": 2,
       "from": "2013-11-13T12:00:00Z",
-      "to": "2013-11-14T11:00:00Z"
+      "to": "2013-11-14T11:00:00Z",
       "links": [
         {
           "rel": "book"
@@ -241,7 +241,7 @@ Devuelve estado `200 OK` y el siguiente `body`:
     {
       "resource_id": 2,
       "from": "2013-11-14T12:00:00Z",
-      "to": "2013-11-15T00:00:00Z"
+      "to": "2013-11-15T00:00:00Z",
       "links": [
         {
           "rel": "book"
@@ -353,3 +353,7 @@ Visualiza una reserva existente.
 
 * Las fechas deberán manejarse siguiendo el standard [ISO 8601](http://es.wikipedia.org/wiki/ISO_8601)
 * La API deberá respetar la arquitectura [REST](http://en.wikipedia.org/wiki/Representational_State_Transfer)
+* Los links en los ejemplos utilizan http://localhost:9292 asumiendo que la API
+  corre en este puerto. Pero si el día de mañana la API se instalace en http://reservatuscosas.acme.com, todas las URLs de los ejemplos deberán cambiar
+* El trabajo deberá implementarse usando TDD, lo que implica que inicialmente
+  deberán escribirse los TESTS antes del código de la API
