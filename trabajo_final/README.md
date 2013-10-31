@@ -357,3 +357,5 @@ corre en este puerto. Pero si el día de mañana la API se instalace en
 http://reservatuscosas.acme.com, todas las URLs de los ejemplos deberán cambiar.
 * El trabajo deberá implementarse usando TDD, lo que implica que inicialmente
 deberán escribirse los TESTS antes del código de la API.
+* El trabajo deberá seguir los coding standards (si no sigue los coding
+standards es motivo de desaprobación).
