@@ -201,13 +201,12 @@ recurso 2 tenemos las siguientes reservas:
 
  * Aceptada una reserva para el día 13/11/2013 de 11:00 a 12:00 
  * Pendiente una reserva para el día 14/11/2013 de 11:00 a 12:00
- * Rechazada una reserva para el dia 13/11/2013 de 14:00 a 15:00
 
 Un pedido de `/resources/1/availability?date=2013-11-12&limit=3` debería devolver:
 
-* Disponibilidad para el 12/11/2013 00:00:00 a 13/11/2013 11:00:00
-* Disponibilidad para el 13/11/2013 12:00:00 a 14/11/2013 11:00:00
-* Disponibilidad para el 14/11/2013 12:00:00 a 15/11/2013 00:00:00
+* Disponibilidad desde 12/11/2013 00:00:00 hasta 13/11/2013 11:00:00
+* Disponibilidad desde 13/11/2013 12:00:00 hasta 14/11/2013 11:00:00
+* Disponibilidad desde 14/11/2013 12:00:00 hasta 15/11/2013 00:00:00
 
 Devuelve estado `200 OK` y el siguiente `body`:
 
@@ -354,6 +353,7 @@ Visualiza una reserva existente.
 * Las fechas deberán manejarse siguiendo el standard [ISO 8601](http://es.wikipedia.org/wiki/ISO_8601)
 * La API deberá respetar la arquitectura [REST](http://en.wikipedia.org/wiki/Representational_State_Transfer)
 * Los links en los ejemplos utilizan http://localhost:9292 asumiendo que la API
-  corre en este puerto. Pero si el día de mañana la API se instalace en http://reservatuscosas.acme.com, todas las URLs de los ejemplos deberán cambiar
+corre en este puerto. Pero si el día de mañana la API se instalace en
+http://reservatuscosas.acme.com, todas las URLs de los ejemplos deberán cambiar.
 * El trabajo deberá implementarse usando TDD, lo que implica que inicialmente
-  deberán escribirse los TESTS antes del código de la API
+deberán escribirse los TESTS antes del código de la API.
