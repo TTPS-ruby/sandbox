@@ -19,7 +19,7 @@ disponible, en cuyo caso la reserva quedará pendiente de aprobación. Si no
 estuviera disponible deberá indicarse la no disponibilidad mediante un código
 de error.
 
-Un usuario administrador es el encargado de aceptar o rechazar una solicitud.
+Luego de realizada la solicitud, la misma puede ser aprobada o rechazada.
 En caso de aceptarse el recurso pasa a estar ocupado, y en caso de rechazarse,
 el recurso sigue estando disponible.
 
@@ -40,29 +40,26 @@ Devuelve estado `200 OK` y el siguiente `body`:
 {
   "resources": [
     {
-      "id": 1,
       "name": "Computadora",
       "description": "Notebook con 4GB de RAM y 256 GB de espacio en disco con Linux",
       "links": [
-	      {
-	        "rel": "self",
+        {
+          "rel": "self",
           "uri": "http://localhost:9292/resources/1"
         }
       ]
     },
     {
-      "id": 2,
       "name": "Monitor",
       "description": "Monitor de 24 pulgadas SAMSUNG",
       "links": [
-	      {
-	        "rel": "self",
+        {
+          "rel": "self",
           "uri": "http://localhost:9292/resources/2"
         }
       ]
     },
     {
-      "id": 3,
       "name": "Sala de reuniones",
       "description": "Sala de reuniones con máquinas y proyector",
       "links": [
@@ -91,7 +88,6 @@ Devuelve estado `200 OK` y el siguiente `body`:
 ```json
 {
   "resource": {
-    "id": 1,
     "name": "Computadora",
     "description": "Notebook con 4GB de RAM y 256 GB de espacio en disco con Linux",
     "links": [
@@ -130,8 +126,6 @@ Devuelve estado `200 OK` y el siguiente `body`:
 {
   "bookings": [
     {
-      "id": 100,
-      "resource_id": 1,
       "start": "2013-10-26T10:00:00Z",
       "end": "2013-10-26T11:00:00Z",
       "status": "approved",
@@ -140,6 +134,10 @@ Devuelve estado `200 OK` y el siguiente `body`:
         {
           "rel": "self",
           "uri": "http://localhost:9292/resources/1/bookings/100"
+        },
+        {
+          "rel": "resource",
+          "uri": "http://localhost:9292/resources/1"
         },
         {
           "rel": "accept",
@@ -154,8 +152,6 @@ Devuelve estado `200 OK` y el siguiente `body`:
       ]
     },
     { 
-      "id": 101,
-      "resource_id": 1,
       "start": "2013-10-26T11:00:00Z",
       "end": "2013-10-26T12:30:00Z",
       "status": "approved",
@@ -165,6 +161,10 @@ Devuelve estado `200 OK` y el siguiente `body`:
             "rel": "self",
             "uri": "http://localhost:9292/resources/1/bookings/101"
           },
+          {
+            "rel": "resource",
+            "uri": "http://localhost:9292/resources/1"
+          },          
           {
             "rel": "accept",
             "uri": "http://localhost:9292/resource/1/bookings/101",
@@ -200,7 +200,8 @@ canceladas o inexistentes en el sistema. Por ejemplo, si asumimos que para el
 recurso 2 tenemos las siguientes reservas:
 
  * Aceptada una reserva para el día 13/11/2013 de 11:00 a 12:00 
- * Pendiente una reserva para el día 14/11/2013 de 11:00 a 12:00
+ * Pendiente una reserva para el día 13/11/2013 de 14:00 a 15:00
+ * Aceptada una reserva para el día 14/11/2013 de 11:00 a 12:00
 
 Un pedido de `/resources/1/availability?date=2013-11-12&limit=3` debería devolver:
 
@@ -212,41 +213,50 @@ Devuelve estado `200 OK` y el siguiente `body`:
 
 ```json
 {
-  "available": [
+  "availability": [
     {
-      "resource_id": 2,
       "from": "2013-11-12T00:00:00Z",
       "to": "2013-11-13T11:00:00Z",
       "links": [
         {
-          "rel": "book"
+          "rel": "book",
           "link": "http://localhost:9292/resources/1/bookings",
           "method": "POST"
-        }
+        },
+        {
+          "rel": "resource",
+          "uri": "http://localhost:9292/resources/1"
+        },
       ]
     },
     {
-      "resource_id": 2,
       "from": "2013-11-13T12:00:00Z",
       "to": "2013-11-14T11:00:00Z",
       "links": [
         {
-          "rel": "book"
+          "rel": "book",
           "link": "http://localhost:9292/resources/1/bookings",
           "method": "POST"
-        }
+        },
+        {
+          "rel": "resource",
+          "uri": "http://localhost:9292/resources/1"
+        }        
       ]
     },
     {
-      "resource_id": 2,
       "from": "2013-11-14T12:00:00Z",
       "to": "2013-11-15T00:00:00Z",
       "links": [
         {
-          "rel": "book"
+          "rel": "book",
           "link": "http://localhost:9292/resources/1/bookings",
           "method": "POST"
-        }
+        },
+        {
+          "rel": "resource",
+          "uri": "http://localhost:9292/resources/1"
+        },        
       ]
     }
   ],
@@ -278,7 +288,6 @@ Devuelve estado `201 CREATED` y el siguiente `body`:
 {
   "book":
   {
-    "resource_id": #ID_CREADO#,
     "from": "2013-11-12T00:00:00Z",
     "to": "2013-11-13T11:00:00Z",
     "status": "pending",
@@ -311,11 +320,53 @@ Cancela una reserva existente.
 
 `DELETE /resources/1/bookings/100 HTTP/1.1`
 
+En caso de una eliminación satisfactoria debera responder con estado `200 OK` y el cuerpo de la respuesta vacío.
+
+En caso que la reserva indicada no exista deberá retornar un código de error `404 NOT FOUND`
+
+
 ### Autorizar reserva
 
-Autoriza una reserva pendiente.
+Autoriza una reserva pendiente. En caso de que haya otras reservas para el mismo recurso pendientes, todas son canceladas.
 
 `PUT /resources/1/bookings/100 HTTP/1.1`
+
+En caso de una autorización satisfactoria debera responder con estado `200 OK` y el el siguiente `body`: 
+
+```json
+{
+  "book":
+  {
+    "from": "2013-11-12T00:00:00Z",
+    "to": "2013-11-13T11:00:00Z",
+    "status": "apporved",
+    "links": [
+      {
+        "rel": "self",
+        "url": "http://localhost:9292/resources/1/bookings/100"
+      },
+      {
+        "rel": "accept",
+        "uri": "http://localhost:9292/resource/1/bookings/100",
+        "method": "PUT"
+      },
+      {
+        "rel": "reject",
+        "uri": "http://localhost:9292/resource/1/bookings/100",
+        "method": "DELETE"
+      },
+      {
+        "rel": "resource",
+        "url": "http://localhost:9292/resources/1"
+      }      
+    ]
+  }
+}
+```
+
+En caso de que la reserva indicada no exista deberá retornar un código de error `404 NOT FOUND`
+En caso de que ya exista una reserva aprobada para dicho lapso deberá retornar un código de error `409 CONFLICT`
+
 
 ### Mostrar una reserva
 
@@ -325,7 +376,6 @@ Visualiza una reserva existente.
 
 ```json
 {
-  "resource_id": #ID_CREADO#,
   "from": "2013-11-12T00:00:00Z",
   "to": "2013-11-13T11:00:00Z",
   "status": "pending",
@@ -333,6 +383,10 @@ Visualiza una reserva existente.
     {
       "rel": "self",
       "url": "http://localhost:9292/resources/1/bookings/#ID_CREADO#"
+    },
+    {
+      "rel": "resource",
+      "uri": "http://localhost:9292/resource/1",
     },
     {
       "rel": "accept",
