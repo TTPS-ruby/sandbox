@@ -10,7 +10,7 @@ siguientes puntos:
     posible la [API de
 recursos](https://github.com/TTPS-ruby/sandbox/tree/master/trabajo_final)*
   * Se desarrolle utilizando Rails
-  * Se aplique TDD: considerando tests de unidad y de ser posible funcionales
+  * Se aplique TDD: considerando tests de unidad y de funcionales
 
 ## Opción 1: desarrollar un plugin para [Redmine](http://www.redmine.org)
 
